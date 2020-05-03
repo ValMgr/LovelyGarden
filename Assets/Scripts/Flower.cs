@@ -114,7 +114,7 @@ public class Flower : MonoBehaviour{
             growth = data.growthLevel;
             water = data.waterLevel;
             stage = data.stage;
-            Debug.Log("Last data for object " + data.id + " => " + data.growthLevel + " /2880 growth - " + data.water + " / 1440 water - " + stage + " / 3");
+            Debug.Log("Last data for object " + data.id + " => " + data.growthLevel + " /2880 growth - " + data.waterLevel + " / 1440 water - " + data.stage + " / 3");
         }
         else{
             Debug.Log("data null or incorrect id");
