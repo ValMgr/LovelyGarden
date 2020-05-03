@@ -6,7 +6,7 @@ public class CameraManager : MonoBehaviour {
 
     private bool mooving = false;
     private Vector3 endPos;
-    private Vector3 startPos;
+    public Vector3 startPos;
 
     // When flower is clicked zoom on the gameObject
     public void FocusTarget(Flower target){
@@ -15,7 +15,7 @@ public class CameraManager : MonoBehaviour {
        // Zoom depend of the stage level of the flower
        switch (target.stage){
             case 0:
-                endPos = new Vector3(0.5f, 3f, -9f);
+                endPos = new Vector3(0.5f, 4f, -12f);
                 break;
             case 1:
                 endPos = new Vector3(0.5f, 4f, -12f);
@@ -24,10 +24,14 @@ public class CameraManager : MonoBehaviour {
                 endPos = new Vector3(0f, 6f, -15f);
                 break;
        }
-       
       
-        startPos = new Vector3(0f, 0f, 0f);
         mooving = true;
+    }
+
+    public void ResetFocus(){
+        transform.parent = null;
+        endPos = startPos;
+        GameObject.Find("GameManager").GetComponent<FlowerStats>().HideStats();
     }   
 
     private void Update() {
@@ -39,11 +43,6 @@ public class CameraManager : MonoBehaviour {
         {
             mooving = false;
         }
-    }
-
-
-    private void OnMouseDrag() {
-        
     }
     
 }

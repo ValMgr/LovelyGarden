@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Flower : MonoBehaviour{
 
@@ -9,15 +10,14 @@ public class Flower : MonoBehaviour{
     public Mesh plant_model1;
     public Mesh plant_model2;
 
-
+    public string id;
     public float growth {get; private set;} = 0f;
     public float water {get; private set;} = 0f;
     public int stage {get; private set;} = 0;
     public System.DateTime currentTime {get; private set;}
     public System.DateTime lastTime {get; private set;}
 
-    public bool selected {get; private set;} = false;
-    
+
     private float totalMinutes;
     private void Start() {
         // Get current time
@@ -31,10 +31,10 @@ public class Flower : MonoBehaviour{
         Growing();
 
         // Display current stats of the games
-        Debug.Log("Temps écoulé: " + totalMinutes + " minute(s)");
-        Debug.Log("Niveau d'eau: " + water);
-        Debug.Log("Progression: " + growth + " / 2880");
-        Debug.Log("Niveau de plante: " + stage);
+        // Debug.Log("Temps écoulé: " + totalMinutes + " minute(s)");
+        // Debug.Log("Niveau d'eau: " + water);
+        // Debug.Log("Progression: " + growth + " / 2880");
+        // Debug.Log("Niveau de plante: " + stage);
 
         switch (stage){
             case 0:
@@ -50,22 +50,31 @@ public class Flower : MonoBehaviour{
 
     }
 
+    // Target Flower when clicked
     private void OnMouseDown() {
-        // Call FocusTarget method from MainCamera gameobject
-        GameObject.Find("MainCamera").GetComponent<CameraManager>().FocusTarget(this);
-        selected = true;
+    
+        if (!EventSystem.current.IsPointerOverGameObject()){
+            // Call FocusTarget method from MainCamera gameobject
+            GameObject.Find("MainCamera").GetComponent<CameraManager>().FocusTarget(this);
+            GameObject.Find("GameManager").GetComponent<FlowerStats>().ChangeTarget(this);
+        }
+
     }
 
     public void Water(){
-        water = 2880f; // 2880f = 100%;
+        water = 1440f; // 1440f = 100%;
     }
 
     private void Growing(){
 
         int buffer = 0;
+        // Foreach minutes spent
         for(int i=0;i<totalMinutes;i++){
+            // If water tank isnt empty
             if(water > 0f){
+                // remove -1f water for each minutes
                 water--;
+                // Add 1 minute to buffer
                 buffer++;
                 if(growth < 2880f){
                     growth++;
@@ -90,24 +99,20 @@ public class Flower : MonoBehaviour{
             
     }
 
-
-
     /* =================================== SAVE GAME MANAGEMENT ====================================== */
 
-    public void SaveGame(){
-        // Save game
-        SaveSystem.SaveGame(this);
-    }
+   
 
-    public void LoadGame(){
-        // Loag game and set new value from save file
-        GameData data = SaveSystem.LoadGame();
+    // public void LoadGame(){
+    //     // Load game and set new value from save file
+    //     //GameData data = SaveSystem.LoadGame();
 
-        lastTime = data.lastDateTime;
-        growth = data.growthLevel;
-        water = data.waterLevel;
-        stage = data.stage;
-
-    }
+    //     if(data != null){
+    //         lastTime = data.lastDateTime;
+    //         growth = data.growthLevel;
+    //         water = data.waterLevel;
+    //         stage = data.stage;
+    //     }
+    // }
 
 }

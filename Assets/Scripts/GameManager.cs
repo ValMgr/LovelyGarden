@@ -6,15 +6,18 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     public GameObject sunLight;
-    public Flower flower;
-
+    [HideInInspector]
+    public GameObject[] flowers;
     public GameObject menu;
-    public GameObject flowerStat;
 
     private void Awake() {
+
+        flowers = GameObject.FindGameObjectsWithTag("Plant");
         // Load savegame 
-        flower.LoadGame();
+        List<GameData> data = SaveSystem.LoadGame();
+        Debug.Log(data[0].id);
         setLight();
+
     }
 
     private void Update() {
@@ -26,17 +29,8 @@ public class GameManager : MonoBehaviour {
             else{
                 menu.SetActive(true);
             }
-        }
 
-        // Display flower's stats when selected
-        if(flower.selected){
-            flowerStat.SetActive(true);
         }
-        else{
-            flowerStat.SetActive(false);
-        }
-
-
     }
 
     private void setLight(){
@@ -55,19 +49,24 @@ public class GameManager : MonoBehaviour {
 
     }
 
+    public void CreateNewPlant(){
+        
+    }
+
     public void Exit(){
         // onClick function to quit application
         Application.Quit();
     }
 
-    private void OnApplicationQuit(){
-        // Save game when application exit
-        flower.GetComponent<Flower>().SaveGame();
-    }
+    // private void OnApplicationQuit(){
+    //     // Save game when application exit
+    //     SaveSystem.SaveGame(flowers);
+
+    // }
 
     private void OnApplicationPause(bool pauseStatus) {
         // Save game when application 'exit' on mobile device (swipe up or exit without button exit)
-        flower.GetComponent<Flower>().SaveGame();
+        SaveSystem.SaveGame(flowers);
     }
 
 
@@ -76,4 +75,5 @@ public class GameManager : MonoBehaviour {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
     
+ 
 }

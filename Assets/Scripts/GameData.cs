@@ -9,10 +9,11 @@ public class GameData {
     public float growthLevel;
     public float waterLevel;
     public int stage;
+    public string id;
 
-    public GameData (Flower flower){
-
+    public GameData(Flower flower){
         // Setup variables to save
+        id = flower.id;
         lastDateTime = flower.currentTime;
         growthLevel = flower.growth;
         waterLevel = flower.water;
