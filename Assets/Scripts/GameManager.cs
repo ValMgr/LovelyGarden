@@ -13,9 +13,20 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
 
         flowers = GameObject.FindGameObjectsWithTag("Plant");
+
         // Load savegame 
         List<GameData> data = SaveSystem.LoadGame();
-        Debug.Log(data[0].id);
+        // For each flower, load data object corresponding
+        if(data != null){
+            for (int i=0;i<flowers.Length;i++){         
+                flowers[i].GetComponent<Flower>().LoadData(data[i]);
+            }
+        }
+        else{
+            // First connection => Instantiate first flower
+        }
+        
+        // Call light management script
         setLight();
 
     }
@@ -49,20 +60,16 @@ public class GameManager : MonoBehaviour {
 
     }
 
-    public void CreateNewPlant(){
-        
-    }
-
     public void Exit(){
         // onClick function to quit application
         Application.Quit();
     }
 
-    // private void OnApplicationQuit(){
-    //     // Save game when application exit
-    //     SaveSystem.SaveGame(flowers);
+    private void OnApplicationQuit(){
+        // Save game when application exit
+        SaveSystem.SaveGame(flowers);
 
-    // }
+    }
 
     private void OnApplicationPause(bool pauseStatus) {
         // Save game when application 'exit' on mobile device (swipe up or exit without button exit)

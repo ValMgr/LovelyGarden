@@ -13,6 +13,7 @@ public class CameraManager : MonoBehaviour {
         transform.parent = target.transform;
        
        // Zoom depend of the stage level of the flower
+       // /!\ Will change with new type of plant
        switch (target.stage){
             case 0:
                 endPos = new Vector3(0.5f, 4f, -12f);
@@ -25,9 +26,11 @@ public class CameraManager : MonoBehaviour {
                 break;
        }
       
+        // Camera is mooving
         mooving = true;
     }
 
+    // When back button clicked reset view to initial position
     public void ResetFocus(){
         transform.parent = null;
         endPos = startPos;
@@ -35,10 +38,12 @@ public class CameraManager : MonoBehaviour {
     }   
 
     private void Update() {
+        // If mooving, go to plant position
         if(mooving){
             transform.localPosition = Vector3.Slerp(this.transform.localPosition, endPos, Time.deltaTime * 1f);
         }
 
+        // If position reached stop camera mooving
         if(Mathf.Round(this.transform.localPosition.x) == endPos.x && Mathf.Round(this.transform.localPosition.y) == endPos.y && Mathf.Round(this.transform.localPosition.z) == endPos.z)
         {
             mooving = false;

@@ -12,7 +12,7 @@ public class GameData {
     public string id;
 
     public GameData(Flower flower){
-        // Setup variables to save
+        // Setup variables to save for each plant
         id = flower.id;
         lastDateTime = flower.currentTime;
         growthLevel = flower.growth;

@@ -28,14 +28,10 @@ public class Flower : MonoBehaviour{
         totalMinutes = (float)timeSpant.TotalMinutes;
         totalMinutes = Mathf.Floor(totalMinutes);
 
+        // Calling Growth management script
         Growing();
 
-        // Display current stats of the games
-        // Debug.Log("Temps écoulé: " + totalMinutes + " minute(s)");
-        // Debug.Log("Niveau d'eau: " + water);
-        // Debug.Log("Progression: " + growth + " / 2880");
-        // Debug.Log("Niveau de plante: " + stage);
-
+        // Display correct mesh in function of current stage level
         switch (stage){
             case 0:
                 this.GetComponent<MeshFilter>().mesh = plant_model0;
@@ -50,7 +46,7 @@ public class Flower : MonoBehaviour{
 
     }
 
-    // Target Flower when clicked
+    // Target Flower when clicked and show plant's stats
     private void OnMouseDown() {
     
         if (!EventSystem.current.IsPointerOverGameObject()){
@@ -61,16 +57,20 @@ public class Flower : MonoBehaviour{
 
     }
 
+    /* =================================== PLANT MANAGEMENT ====================================== */
+
+    // Refill water buffer
     public void Water(){
         water = 1440f; // 1440f = 100%;
     }
 
+    // Growth in function of time spent
     private void Growing(){
 
         int buffer = 0;
         // Foreach minutes spent
         for(int i=0;i<totalMinutes;i++){
-            // If water tank isnt empty
+            // If water buffer isnt empty
             if(water > 0f){
                 // remove -1f water for each minutes
                 water--;
@@ -87,9 +87,11 @@ public class Flower : MonoBehaviour{
                 }
             }
         }
+        // Remove each minutes used to growth
+        // times remaining is each minutes without water in tank
         totalMinutes -= buffer;
 
-
+        // if the remaining time is higher than 2d (2880 minutes) decrease 1 stage level
         if(totalMinutes > 2880f){
             if(stage > 0){
                 stage--;
@@ -99,20 +101,24 @@ public class Flower : MonoBehaviour{
             
     }
 
-    /* =================================== SAVE GAME MANAGEMENT ====================================== */
+    /* =================================== LOAD GAME MANAGEMENT ====================================== */
 
    
 
-    // public void LoadGame(){
-    //     // Load game and set new value from save file
-    //     //GameData data = SaveSystem.LoadGame();
+    public void LoadData(GameData data){
 
-    //     if(data != null){
-    //         lastTime = data.lastDateTime;
-    //         growth = data.growthLevel;
-    //         water = data.waterLevel;
-    //         stage = data.stage;
-    //     }
-    // }
+        // Check if data.id correspond to current flower's id
+        // If yes update data from savegame file
+        if(data != null && data.id == id){
+            lastTime = data.lastDateTime;
+            growth = data.growthLevel;
+            water = data.waterLevel;
+            stage = data.stage;
+            Debug.Log("Last data for object " + data.id + " => " + data.growthLevel + " /2880 growth - " + data.water + " / 1440 water - " + stage + " / 3");
+        }
+        else{
+            Debug.Log("data null or incorrect id");
+        }
+    }
 
 }
